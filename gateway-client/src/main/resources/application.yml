@@ -1,0 +1,18 @@
+server:
+  port: 8090
+
+cluster:
+  nacos:
+    node: 127.0.0.1:8848
+
+spring:
+  application:
+    name: study-gateway-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${cluster.nacos.node}
+        #如果本地开发的话,不希望注册到Nacos的把这个改为false
+        register-enabled: true
+        group: study
+

@@ -1,0 +1,112 @@
+server:
+  port: 8080
+
+cluster:
+  nacos:
+    node: 127.0.0.1:8848
+
+spring:
+  application:
+    name: study-gateway-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${cluster.nacos.node}
+        #如果本地开发的话,不希望注册到Nacos的把这个改为false
+        register-enabled: true
+        group: study
+
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            allowed-methods:
+            - GET
+            - POST
+            - DELETE
+            - PUT
+            - OPTION
+
+      # 整合macos
+      discovery:
+        locator:
+          enabled: true  #表明gateway开启服务注册和发现的功能，并且spring cloud gateway自动根据服务发现为每一个服务创建了一个router，这个router将以服务名开头的请求路径转发到对应的服务
+          lower-case-service-id: true  #是将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了
+
+#      routes:
+
+#      # 过滤test请求，localhost:8080/test/gateway/StripPrefix -> http://localhost:8090/gateway/StripPrefix
+#      - id: test
+#        uri: http://localhost:8090
+#        filters:
+#        # 跳过前几位指定路径
+#        - StripPrefix=1
+#        predicates:
+#        - Path=/test/**
+
+#      # 通过请求方式匹配
+#      - id: get_method
+#        uri: http://localhost:8090
+#        order: 0
+#        predicates:
+#        # get请求
+#        - Method=GET
+#        filters:
+#        - PrefixPath=/gateway/get
+#      - id: post_method
+#        uri: http://localhost:8090
+#        order: 0
+#        predicates:
+#        # post请求
+#        - Method=POST
+#        filters:
+#        - PrefixPath=/gateway/post
+
+#      #  通过时间匹配
+#      - id: before_route
+#        uri: http://localhost:8090
+#        predicates:
+#        # 在某时间之前访问
+#        - Before=2021-11-26T18:03:00+08:00[Asia/Shanghai]
+#        filters:
+#        - PrefixPath=/gateway/Before
+#      - id: between_route
+#        uri: http://localhost:8090
+#        predicates:
+#        # 在某两个时间之间访问
+#        - Between=2021-11-26T18:03:00+08:00[Asia/Shanghai], 2021-11-26T18:04:00+08:00[Asia/Shanghai]
+#        filters:
+#        - PrefixPath=/gateway/Between
+#      - id: after_route
+#        uri: http://localhost:8090
+#        predicates:
+#        # 在某时间之后访问
+#        - After=2021-11-26T18:04:00+08:00[Asia/Shanghai]
+#        filters:
+#        - PrefixPath=/gateway/After
+
+#      - id: query_route
+#        uri: http://localhost:8090
+#        filters:
+#        - PrefixPath=/gateway/Query
+#        predicates:
+#        - Query=query
+
+#      # 重定向
+#      - id: prefixpath_route
+#        uri: http://localhost:8090/gateway/RedirectTo
+#        filters:
+#        - RedirectTo=302, https://baidu.com
+#        predicates:
+#        - Path=/
+
+#      # 重新设置请求路径， localhost:8080/setpath/SetPath -> localhost:8090/gateway/SetPath
+#      - id: setpath_route
+#        uri: http://localhost:8090
+#        predicates:
+#        - Path=/setpath/{segment}
+#        filters:
+#        - SetPath=/gateway/{segment}

@@ -1,0 +1,4 @@
+rootProject.name = 'study-gateway'
+include 'gateway-server'
+include 'gateway-client'
+
